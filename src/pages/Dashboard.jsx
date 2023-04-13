@@ -170,7 +170,7 @@ function Dashboard() {
               </TableContainer>
               <Center>
                 <Button colorScheme="blue" className="m-2">
-                  Checkout
+                  Checkout To Payment
                 </Button>
               </Center>
             </div>
