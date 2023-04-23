@@ -1,22 +1,41 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Select } from "@chakra-ui/react";
-import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button, Center } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Button,
+  Center,
+} from "@chakra-ui/react";
 
 //components
 import ProductCard from "../components/ProductCard";
 import TransactionTable from "../components/TransactionTable";
 
 //features
-import { searchCategoryHandler, setFilteredCategory, getProducts } from "../features/productSlice";
+import {
+  searchCategoryHandler,
+  setFilteredCategory,
+  getProducts,
+  getProductCategory,
+} from "../features/productSlice";
+import ProductCategory from "../components/ProductCategory";
 
 function Dashboard() {
   //------declarations--------
 
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.product.productList);
+  const categoryList = useSelector((state) => state.product.categoryList);
   const searchCategory = useSelector((state) => state.product.searchCategory); //get search category from global
-  const filteredCategory = useSelector((state) => state.product.filteredCategory); //get search category from global
+  const filteredCategory = useSelector(
+    (state) => state.product.filteredCategory
+  ); //get search category from global
 
   //------render product list--------
 
@@ -26,11 +45,11 @@ function Dashboard() {
         return (
           <ProductCard
             //product ID
-            id={p.id}
+            id={p.idproduct}
             //
             productImage={p.productImage}
             //
-            productName={p.productName}
+            productName={p.name}
             //
             description={p.description}
             //
@@ -62,6 +81,11 @@ function Dashboard() {
     }
   };
 
+  const renderCategory = () => {
+    return categoryList.map((category) => {
+      return <ProductCategory name={category.name} />;
+    });
+  };
   //------render transaction table--------
 
   // const renderTransactionTable = () => {
@@ -87,7 +111,7 @@ function Dashboard() {
     dispatch(
       setFilteredCategory(
         productList.filter((product) => {
-          return product.category == event.target.value;
+          return product.category === event.target.value;
         })
       )
     );
@@ -96,6 +120,8 @@ function Dashboard() {
   //------get product's db--------
 
   useEffect(() => {
+    console.log("Useeffect is running");
+    dispatch(getProductCategory());
     dispatch(getProducts());
   }, []);
 
@@ -110,16 +136,13 @@ function Dashboard() {
           <div spacing={3} className="grid grid-cols-3 m-2 pt-5">
             {/* Category selector */}
             <div className="col-span-2 mr-2">
-              <Select onChange={onChangeCategory} name="searchCategory" placeholder="Category" size="md">
-                <option value="kaos" className="text-black">
-                  Kaos
-                </option>
-                <option value="celana" className="text-black">
-                  Celana
-                </option>
-                <option value="aksesoris" className="text-black">
-                  Aksesoris
-                </option>
+              <Select
+                onChange={onChangeCategory}
+                name="searchCategory"
+                placeholder="Category"
+                size="md"
+              >
+                {renderCategory()}
               </Select>
             </div>
 

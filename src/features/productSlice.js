@@ -6,6 +6,7 @@ export const productSlice = createSlice({
 
   initialState: {
     productList: [],
+    categoryList: [],
     quantity: 1,
     salesType: "Dine-in",
 
@@ -18,9 +19,14 @@ export const productSlice = createSlice({
   },
 
   reducers: {
-    setProduct: (state, actions) => {
-      state.productList = actions.payload; //change "state" into "action"'s value
+    setProduct: (state, action) => {
+      state.productList = action.payload; //change "state" into "action"'s value
     },
+
+    setCategory: (state, action) => {
+      state.categoryList = action.payload;
+    },
+
     //------quantity
     addQuantity: (state) => {
       state.quantity += 1;
@@ -56,17 +62,50 @@ export const productSlice = createSlice({
   },
 });
 
+export const {
+  addProduct,
+  setProduct,
+  setCategory,
+  addQuantity,
+  decrsQuantity,
+  resetQuantity,
+  salesTypeHandler,
+  searchProductHandler,
+  searchCategoryHandler,
+  setFilteredCategory,
+  setFilteredName,
+  sortByHandler,
+} = productSlice.actions;
+
+export default productSlice.reducer;
+
 export function getProducts() {
   return async (dispatch) => {
-    // try {
-    const response = await Axios.get("http://localhost:2000/products"); //array
-    dispatch(setProduct(response.data));
-    // } catch (error) {
-    //   console.log("ERROR\n" + error);
-    // }
+    try {
+      const response = await Axios.get(
+        "http://localhost:8000/product/productlist"
+      ); //array
+      // console.log(response);
+      if (response.data) {
+        dispatch(setProduct(response.data.allProduct));
+      }
+    } catch (error) {
+      console.log("ERROR\n" + error);
+    }
   };
 }
 
-export const { addProduct, setProduct, addQuantity, decrsQuantity, resetQuantity, salesTypeHandler, searchProductHandler, searchCategoryHandler, setFilteredCategory, setFilteredName, sortByHandler } = productSlice.actions;
-
-export default productSlice.reducer;
+export function getProductCategory() {
+  return async (dispatch) => {
+    try {
+      let response = await Axios.get(
+        "http://localhost:8000/category/categorylist"
+      );
+      if (response.data.success) {
+        dispatch(setCategory(response.data.categoryList));
+      }
+    } catch (error) {
+      console.log(`Error : ${error}`);
+    }
+  };
+}
