@@ -27,7 +27,7 @@ import * as Yup from "yup";
 //Features
 import { addToTransaction } from "../features/transactions/transactionSlice";
 
-function ProductCard(props) {
+function ProductUpdateCard(props) {
   //---------------------Javascript Functions------------------------
 
   const { id, productName, price, productImage, description, category } = props; //get values from localhost/.../products
@@ -66,8 +66,10 @@ function ProductCard(props) {
 
   return (
     <div>
-      <Card direction={{ base: "column", sm: "row" }} overflow="hidden" variant="outline" m="5" p="3">
-        <Image src={productImage} maxH="180px" alt={productName} borderRadius="lg" />
+      <Card direction={{ base: "column", sm: "row" }} overflow="hidden" variant="outline" m="5" px="3">
+        <Center>
+          <Image src={productImage} maxH="180px" alt={productName} borderRadius="lg" />
+        </Center>
 
         <Stack>
           <CardBody>
@@ -75,20 +77,25 @@ function ProductCard(props) {
               {productName}
             </Heading>
 
-            <Text color="gray.500" size="xl" pt="2">
+            <Text color="gray.500" size="xl" py="2">
               {category}
+            </Text>
+
+            <Text color="blue.600" fontSize="xl">
+              IDR {price}
             </Text>
             <Text py="2">{description} </Text>
             <Button
               onClick={() => {
                 onOpen();
-                dispatch(resetQuantity());
               }}
-              variant="solid"
-              colorScheme="blue"
+              colorScheme="green"
               mt="3"
             >
-              Add
+              Update
+            </Button>
+            <Button colorScheme="red" mt="3" mx="2">
+              Delete
             </Button>
           </CardBody>
         </Stack>
@@ -106,64 +113,7 @@ function ProductCard(props) {
           </AlertDialogHeader>
           <AlertDialogCloseButton />
 
-          <AlertDialogBody color="gray.500" fontSize="lg">
-            {category}
-          </AlertDialogBody>
-          <AlertDialogBody color="blue.600" fontSize="xl">
-            IDR {price}
-          </AlertDialogBody>
-
-          {/* Formik */}
-
-          <AlertDialogBody className="pb-3">
-            <Formik
-              initialValues={{
-                SalesType: "",
-              }}
-              validationSchema={SalesTypeSchema}
-              onSubmit={() => {
-                addTransaction();
-                onClose();
-              }}
-            >
-              {() => (
-                <Form>
-                  <div className="flex gap-2">
-                    <div id="my-radio-group">Sales Type: </div>
-                    <div role="group" name="SalesType" aria-labelledby="my-radio-group" onChange={onChangeSalesType}>
-                      <label>
-                        <Field type="radio" name="SalesType" value="Dine-in" className="ml-2" /> Dine-in
-                      </label>
-                      <label>
-                        <Field type="radio" name="SalesType" value="Take Away" className="ml-2" /> Take Away
-                      </label>
-                      <label>
-                        <Field type="radio" name="SalesType" value="Go Food" className="ml-2" /> Go Food
-                      </label>
-                      <ErrorMessage component="div" name="SalesType" style={{ color: "red" }} />
-                    </div>
-                  </div>
-
-                  <div className="flex py-5">
-                    Quantity:
-                    <Button className="ml-6" onClick={() => dispatch(decrsQuantity())}>
-                      -
-                    </Button>
-                    <Text px="5" py="2" className="text-gray-600">
-                      {quantity}
-                    </Text>
-                    <Button onClick={() => dispatch(addQuantity())}>+</Button>
-                  </div>
-
-                  <Center>
-                    <Button type="submit" colorScheme="blue" mb="3" px="150">
-                      Add item
-                    </Button>
-                  </Center>
-                </Form>
-              )}
-            </Formik>
-          </AlertDialogBody>
+          <AlertDialogBody color="gray.500" fontSize="lg"></AlertDialogBody>
 
           {/*  */}
         </AlertDialogContent>
@@ -172,4 +122,4 @@ function ProductCard(props) {
   );
 }
 
-export default ProductCard;
+export default ProductUpdateCard;

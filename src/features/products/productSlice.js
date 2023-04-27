@@ -5,8 +5,10 @@ export const productSlice = createSlice({
   name: "product",
 
   initialState: {
+    page: 1, //PAGINATION
+    itemsPerPage: 5,
+    maxPage: 0,
     productList: [],
-    categoryList: [],
     quantity: 1,
     salesType: "Dine-in",
 
@@ -40,9 +42,25 @@ export const productSlice = createSlice({
     resetQuantity: (state) => {
       state.quantity = 1;
     },
-    //-------sizes
+
+    //sales type
     salesTypeHandler: (state, value) => {
       state.salesType = value.payload;
+    },
+
+    //pagination
+    nextPageHandler: (state) => {
+      if (state.page < state.maxPage) {
+        state.page = state.page += 1;
+      }
+    },
+    prevPageHandler: (state) => {
+      if (state.page > 1) {
+        state.page = state.page -= 1;
+      }
+    },
+    setMaxPage: (state) => {
+      state.maxPage = Math.ceil(state.productList.length / state.itemsPerPage);
     },
 
     ///------------------FILTER----------------------
@@ -62,6 +80,45 @@ export const productSlice = createSlice({
   },
 });
 
+export function getProducts() {
+  return async (dispatch) => {
+    try {
+      const response = await Axios.get("http://localhost:2000/products"); //array
+      dispatch(setProduct(response.data));
+      dispatch(setMaxPage());
+    } catch (error) {
+      console.log("ERROR\n" + error);
+    }
+  };
+}
+
+// export function getProducts() {
+//   return async (dispatch) => {
+//     try {
+//       const response = await Axios.get("http://localhost:2000/products"); //array
+//       // console.log(response);
+//       if (response.data) {
+//         dispatch(setProduct(response.data.allProduct));
+//       }
+//     } catch (error) {
+//       console.log("ERROR\n" + error);
+//     }
+//   };
+// }
+
+// export function getProductCategory() {
+//   return async (dispatch) => {
+//     try {
+//       let response = await Axios.get("http://localhost:8000/category/categorylist");
+//       if (response.data.success) {
+//         dispatch(setCategory(response.data.categoryList));
+//       }
+//     } catch (error) {
+//       console.log(`Error : ${error}`);
+//     }
+//   };
+// }
+
 export const {
   addProduct,
   setProduct,
@@ -70,6 +127,9 @@ export const {
   decrsQuantity,
   resetQuantity,
   salesTypeHandler,
+  nextPageHandler,
+  prevPageHandler,
+  setMaxPage,
   searchProductHandler,
   searchCategoryHandler,
   setFilteredCategory,
@@ -78,34 +138,3 @@ export const {
 } = productSlice.actions;
 
 export default productSlice.reducer;
-
-export function getProducts() {
-  return async (dispatch) => {
-    try {
-      const response = await Axios.get(
-        "http://localhost:8000/product/productlist"
-      ); //array
-      // console.log(response);
-      if (response.data) {
-        dispatch(setProduct(response.data.allProduct));
-      }
-    } catch (error) {
-      console.log("ERROR\n" + error);
-    }
-  };
-}
-
-export function getProductCategory() {
-  return async (dispatch) => {
-    try {
-      let response = await Axios.get(
-        "http://localhost:8000/category/categorylist"
-      );
-      if (response.data.success) {
-        dispatch(setCategory(response.data.categoryList));
-      }
-    } catch (error) {
-      console.log(`Error : ${error}`);
-    }
-  };
-}

@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 //Pages
 import Dashboard from "./pages/Dashboard";
+import Products from "./pages/Products";
 import Transaction from "./pages/Transaction";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -16,6 +17,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/Products" element={<Products />} />
         <Route path="/Transaction" element={<Transaction />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />

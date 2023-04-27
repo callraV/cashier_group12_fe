@@ -1,15 +1,13 @@
-//GLOBAL STATES
-
 import { configureStore } from "@reduxjs/toolkit";
 //global states
-import productReducer from "../features/productSlice";
-import cartReducer from "../features/cartSlice";
+import productReducer from "../features/products/productSlice";
+import transactionReducer from "../features/transactions/transactionSlice";
 import userReducer from "../features/users/userSlice";
 
 export default configureStore({
   reducer: {
     product: productReducer,
-    cart: cartReducer,
+    transaction: transactionReducer,
     user: userReducer,
   },
 });

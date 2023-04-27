@@ -1,47 +1,50 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Select } from "@chakra-ui/react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Button,
-  Center,
-} from "@chakra-ui/react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, Stack, Button, Text, Center } from "@chakra-ui/react";
 
 //components
 import ProductCard from "../components/ProductCard";
 import TransactionTable from "../components/TransactionTable";
 
 //features
-import {
-  searchCategoryHandler,
-  setFilteredCategory,
-  getProducts,
-  getProductCategory,
-} from "../features/productSlice";
+import { searchCategoryHandler, setFilteredCategory, getProducts, nextPageHandler, prevPageHandler } from "../features/products/productSlice";
 import ProductCategory from "../components/ProductCategory";
 
 function Dashboard() {
   //------declarations--------
 
   const dispatch = useDispatch();
+
+  //product
   const productList = useSelector((state) => state.product.productList);
   const categoryList = useSelector((state) => state.product.categoryList);
   const searchCategory = useSelector((state) => state.product.searchCategory); //get search category from global
-  const filteredCategory = useSelector(
-    (state) => state.product.filteredCategory
-  ); //get search category from global
+  const filteredCategory = useSelector((state) => state.product.filteredCategory); //get search category from global
+  const page = useSelector((state) => state.product.page);
+  const itemsPerPage = useSelector((state) => state.product.itemsPerPage);
+  const maxPage = useSelector((state) => state.product.maxPage);
+
+  //transaction
+  const transactionList = useSelector((state) => state.transaction.transactionList);
+  const totalEnd = useSelector((state) => state.transaction.totalEnd);
+
+  //------get product's db--------
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, []);
 
   //------render product list--------
 
   const renderProducts = () => {
+    //-------pagination-------
+    const beginningIndex = (page - 1) * itemsPerPage;
+    const currentData = productList.slice(beginningIndex, beginningIndex + itemsPerPage);
+    //-------------------------
     if (searchCategory === "") {
-      return productList.map((p) => {
+      return currentData.map((p) => {
         return (
           <ProductCard
             //product ID
@@ -49,7 +52,7 @@ function Dashboard() {
             //
             productImage={p.productImage}
             //
-            productName={p.name}
+            productName={p.productName}
             //
             description={p.description}
             //
@@ -81,27 +84,31 @@ function Dashboard() {
     }
   };
 
-  const renderCategory = () => {
-    return categoryList.map((category) => {
-      return <ProductCategory name={category.name} />;
-    });
-  };
-  //------render transaction table--------
-
-  // const renderTransactionTable = () => {
-  //   return transactionList.map((c) => {
-  //     return (
-  //       <TransactionTable
-  //         productName={c.productName}
-  //         //
-  //         quantity={c.qty}
-  //         //
-  //         price={c.price}
-  //         //
-  //       />
-  //     );
+  // const renderCategory = () => {
+  //   return categoryList.map((category) => {
+  //     return <ProductCategory name={category.name} />;
   //   });
   // };
+  //------render transaction table--------
+
+  const renderTransactionTable = () => {
+    return transactionList.map((c) => {
+      return (
+        <TransactionTable
+          id={c.id}
+          //
+          productName={c.productName}
+          //
+          quantity={c.qty}
+          //
+          price={c.price}
+          //
+          //
+          salesType={c.salesType}
+        />
+      );
+    });
+  };
 
   //------category handler--------
 
@@ -117,32 +124,27 @@ function Dashboard() {
     );
   };
 
-  //------get product's db--------
-
-  useEffect(() => {
-    console.log("Useeffect is running");
-    dispatch(getProductCategory());
-    dispatch(getProducts());
-  }, []);
-
   //------------------------------Driver-------------------------------
   return (
     <div className="bg-neutral-800 text-white min-h-screen">
-      <br />
-      <div className="grid grid-cols-5 bg-black">
+      <div className="grid grid-cols-6">
         {/* // */}
 
         <div name="ProductList" className="col-span-3">
-          <div spacing={3} className="grid grid-cols-3 m-2 pt-5">
+          <div spacing={3} className="grid grid-cols-3 m-5">
+            {/*  */}
             {/* Category selector */}
             <div className="col-span-2 mr-2">
-              <Select
-                onChange={onChangeCategory}
-                name="searchCategory"
-                placeholder="Category"
-                size="md"
-              >
-                {renderCategory()}
+              <Select onChange={onChangeCategory} name="searchCategory" placeholder="All products" size="md">
+                <option value="kaos" className="text-black">
+                  Kaos
+                </option>
+                <option value="celana" className="text-black">
+                  Celana
+                </option>
+                <option value="aksesoris" className="text-black">
+                  Aksesoris
+                </option>
               </Select>
             </div>
 
@@ -165,11 +167,43 @@ function Dashboard() {
 
           {/* render products */}
           <div className="">{renderProducts()}</div>
+
+          {/* --------- pagination ------- */}
+
+          <Center>
+            <Stack direction="row" spacing={4} align="center" mb="5">
+              <Button
+                onClick={() => {
+                  dispatch(prevPageHandler());
+                }}
+                colorScheme="gray"
+                color="black"
+                size="sm"
+              >
+                Prev
+              </Button>
+              <Text color="white" size="sm">
+                {page} out of {maxPage}
+              </Text>
+              <Button
+                onClick={() => {
+                  dispatch(nextPageHandler());
+                }}
+                colorScheme="gray"
+                color="black"
+                size="sm"
+              >
+                Next
+              </Button>
+            </Stack>
+          </Center>
+
+          {/* ------------------------------ */}
         </div>
 
-        {/* // */}
+        {/* TRANSACTION TABLE */}
 
-        <div name="TransactionTable" className="col-span-2">
+        <div name="TransactionTable" className="col-span-3">
           <div className="text-black p-5 col-span-2">
             <div className="bg-white rounded-lg">
               <TableContainer>
@@ -178,15 +212,17 @@ function Dashboard() {
                     <Tr>
                       <Th>Items</Th>
                       <Th>Quantity</Th>
+                      <Th>Sales Type</Th>
                       <Th isNumeric>Price (IDR)</Th>
                     </Tr>
                   </Thead>
-                  <Tbody>{/* Tabled items */}</Tbody>
+                  <Tbody>{renderTransactionTable()}</Tbody>
                   <Tbody>
                     <Tr>
                       <Td></Td>
+                      <Td></Td>
                       <Th>TOTAL</Th>
-                      <Td isNumeric>Total</Td>
+                      <Td isNumeric>{totalEnd}</Td>
                     </Tr>
                   </Tbody>
                 </Table>
