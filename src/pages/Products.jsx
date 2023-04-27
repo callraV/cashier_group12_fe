@@ -1,13 +1,30 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Select } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Stack, Button, Text, Center } from "@chakra-ui/react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
+  useDisclosure,
+  Card,
+  CardBody,
+  CardFooter,
+  Heading,
+  Image,
+  Divider,
+  ButtonGroup,
+  Center,
+  Stack,
+  Button,
+  Text,
+} from "@chakra-ui/react";
+import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 
 //components
 import ProductUpdateCard from "../components/ProductUpdateCard";
-import TransactionTable from "../components/TransactionTable";
-
 //features
 import { searchCategoryHandler, setFilteredCategory, getProducts, nextPageHandler, prevPageHandler } from "../features/products/productSlice";
 import ProductCategory from "../components/ProductCategory";
@@ -16,6 +33,10 @@ function Products() {
   //------declarations--------
 
   const dispatch = useDispatch();
+  //
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
+  //
 
   const productList = useSelector((state) => state.product.productList);
   const categoryList = useSelector((state) => state.product.categoryList);
@@ -106,40 +127,142 @@ function Products() {
 
       <div spacing={3} className="grid grid-cols-3 pt-5 px-5">
         {/*  */}
-        {/* Category selector */}
-        <div className="col-span-2 mr-2">
-          <Select onChange={onChangeCategory} name="searchCategory" placeholder="All products" size="md">
-            <option value="kaos" className="text-black">
-              Kaos
-            </option>
-            <option value="celana" className="text-black">
-              Celana
-            </option>
-            <option value="aksesoris" className="text-black">
-              Aksesoris
-            </option>
-          </Select>
-        </div>
 
-        {/* Sort selector */}
-        <Select name="sortBy" placeholder="Sort by" size="md">
-          <option value="lowPrice" className="text-black">
-            Lowest price first
-          </option>
-          <option value="highPrice" className="text-black">
-            Higher price first
-          </option>
-          <option value="A-Z" className="text-black">
-            A-Z
-          </option>
-          <option value="Z-A" className="text-black">
-            Z-A
-          </option>
-        </Select>
+        <Button
+          onClick={() => {
+            onOpen();
+          }}
+          className="col-span-3"
+          colorScheme="blue"
+          p="7"
+        >
+          Add new product
+        </Button>
+
+        {/* alert */}
+        <AlertDialog motionPreset="slideInBottom" leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen}>
+          <AlertDialogOverlay />
+
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="2xl">New product</AlertDialogHeader>
+
+            <AlertDialogCloseButton />
+
+            <AlertDialogBody>
+              <form>
+                <div>
+                  <div className="border-b border-gray-900/10 pb-10">
+                    <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                      <div className="col-span-full">
+                        <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900">
+                          Product photo
+                        </label>
+                        <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                          <div className="text-center">
+                            <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
+                            <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                              <label
+                                htmlFor="file-upload"
+                                className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                              >
+                                <span>Upload a file</span>
+                                <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                              </label>
+                              <p className="pl-1">or drag and drop</p>
+                            </div>
+                            <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-b border-gray-900/10 pb-12">
+                    <div className="mt-7 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                      {/* Product name */}
+                      <div className="sm:col-span-6">
+                        <label htmlFor="productName" className="block text-sm font-medium leading-6 text-gray-900">
+                          Product name
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            id="productName"
+                            name="productName"
+                            type="text"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="sm:col-span-3">
+                        <label htmlFor="Category" className="block text-sm font-medium leading-6 text-gray-900">
+                          Category
+                        </label>
+                        <div className="mt-2">
+                          <select
+                            id="Category"
+                            name="Category"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                          >
+                            <option>Kaos</option>
+                            <option>Celana</option>
+                            <option>Aksesoris</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="sm:col-span-3">
+                        <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                          Price
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="number"
+                            name="price"
+                            id="price"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-span-full">
+                        <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
+                          Description
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="text"
+                            name="description"
+                            id="description"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="my-6 flex items-center justify-end gap-x-6">
+                  <button onClick={onClose} type="button" className="text-sm font-semibold leading-6 text-gray-900">
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Add
+                  </button>
+                </div>
+              </form>
+            </AlertDialogBody>
+
+            {/*  */}
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       {/* render products */}
-      <div className="">{renderProducts()}</div>
+      <div>{renderProducts()}</div>
 
       {/* --------- pagination ------- */}
 
