@@ -1,11 +1,31 @@
-import React from "react";
-// import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 // import CartItem from "../components/CartItem";
 // import CartTable from "../components/CartTable";
 // import { getTotalPrice } from "../features/store/cartSlice";
-import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Button,
+} from "@chakra-ui/react";
+import { fetchAllTransaction } from "../features/transaction/transactionSlice";
 
 function Transaction() {
+  const dispatch = useDispatch();
+  const userGlobal = useSelector((state) => state.user.user);
+  // const { id } = userGlobal;
+  const { id } = useParams();
+
+  useEffect(() => {
+    dispatch(fetchAllTransaction(id));
+  });
+
   //----------------------------------------------------------------
   return (
     <div className="bg-neutral-800 text-white min-h-screen">

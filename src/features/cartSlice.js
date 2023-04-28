@@ -24,6 +24,23 @@ export const cartSlice = createSlice({
     setTotalEnd: (state, action) => {
       state.totalEnd = action.payload;
     },
+
+    incQuantity: (state, action) => {
+      let { result, quantity, addedPrice } = action.payload;
+      state.cartList[result].quantity += quantity;
+      state.cartList[result].price += addedPrice;
+    },
+
+    dcsQuantity: (state, action) => {
+      let { result, quantity, addedPrice } = action.payload;
+      state.cartList[result].quantity -= quantity;
+      state.cartList[result].price -= addedPrice;
+    },
+
+    deleteItem: (state, action) => {
+      // console.log(action.payload);
+      state.cartList = action.payload;
+    },
   },
 });
 
@@ -36,10 +53,18 @@ export function addToCart(data) {
   };
 }
 
+export const deleteCartItem = (data) => {
+  return async (dispatch) => {
+    dispatch(deleteItem(data));
+  };
+};
+
 //called for in CartItem.jsx :
 export function removeFromCart(cartId) {
   return async (dispatch) => {
-    let response = await Axios.delete("http://localhost:2000/carts/" + Object.values(cartId));
+    let response = await Axios.delete(
+      "http://localhost:2000/carts/" + Object.values(cartId)
+    );
     dispatch(getCart(response.data));
     dispatch(getTotalPrice());
   };
@@ -62,10 +87,21 @@ export function getTotalPrice() {
   };
 }
 
+export const addingQuantity = (id) => {
+  console.log(id);
+};
+
 // export function checkCart() {
 //   return Axios.get("http://localhost:2000/carts");
 // }
 
 // Action creators are generated for each case reducer function
-export const { addCart, setCart, setTotalEnd } = cartSlice.actions;
+export const {
+  addCart,
+  setCart,
+  setTotalEnd,
+  incQuantity,
+  dcsQuantity,
+  deleteItem,
+} = cartSlice.actions;
 export default cartSlice.reducer;

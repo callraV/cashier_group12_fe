@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -31,6 +31,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 //Features
 import { addToCart } from "../features/cartSlice";
+import { addCart, incQuantity } from "../features/cartSlice";
 
 function ProductCard(props) {
   //---------------------Javascript Functions------------------------
@@ -51,29 +52,61 @@ function ProductCard(props) {
   //
   const quantity = useSelector((state) => state.product.quantity); //get quanntity global
   const salesType = useSelector((state) => state.product.salesType);
+  const cartList = useSelector((state) => state.cart.cartList);
 
   const onChangeSalesType = (event) => {
     dispatch(salesTypeHandler(event.target.value));
   };
+
+  const addItemToCart = (item) => {
+    // console.log(id);
+    const result = cartList.findIndex((itemInCart) => {
+      return itemInCart.idproduct === id;
+    });
+
+    if (result === -1) {
+      let tempValue = {
+        ...item,
+        idproduct: id,
+        productName,
+        category,
+        quantity,
+        price: quantity * price,
+      };
+      dispatch(addCart(tempValue));
+    } else {
+      let temp = {
+        ...cartList[result],
+        quantity: cartList[result].quantity + quantity,
+      };
+      let data = {
+        result,
+        quantity,
+        addedPrice: quantity * price,
+      };
+      dispatch(incQuantity(data));
+    }
+  };
+
   //schema
   const SalesTypeSchema = Yup.object().shape({
     SalesType: Yup.string().required("Please select sales type"),
   });
-  const addCart = () => {
-    dispatch(
-      addToCart({
-        productId: id,
-        productName: productName,
-        description: description,
-        category: category,
-        price: price,
-        salesType: salesType,
-        qty: quantity,
-        totalPrice: quantity * price,
-      })
-    );
-    // console.log(dispatch(checkCart()));
-  };
+  // const addCart = () => {
+  //   dispatch(
+  //     addToCart({
+  //       productId: id,
+  //       productName: productName,
+  //       description: description,
+  //       category: category,
+  //       price: price,
+  //       salesType: salesType,
+  //       qty: quantity,
+  //       totalPrice: quantity * price,
+  //     })
+  //   );
+  //   // console.log(dispatch(checkCart()));
+  // };
 
   //-------------------------------------------------------------------
 
@@ -132,8 +165,10 @@ function ProductCard(props) {
         <Stack>
           <CardBody>
             <Heading size="md">{productName}</Heading>
+            <Text>Rp.{price},00</Text>
 
             <Text className="text-gray-400">{category}</Text>
+            <Text className="text-gray-400">{idproduct}</Text>
             <Text py="2">{description}</Text>
             <Button
               onClick={() => {
@@ -172,7 +207,7 @@ function ProductCard(props) {
             {category}
           </AlertDialogBody>
           <AlertDialogBody color="blue.600" fontSize="xl">
-            IDR {price}
+            IDR {price * quantity}
           </AlertDialogBody>
 
           {/* Formik */}
@@ -183,8 +218,8 @@ function ProductCard(props) {
                 SalesType: "",
               }}
               validationSchema={SalesTypeSchema}
-              onSubmit={() => {
-                addCart();
+              onSubmit={(value) => {
+                addItemToCart(value);
                 onClose();
               }}
             >
