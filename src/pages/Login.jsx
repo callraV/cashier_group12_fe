@@ -30,7 +30,7 @@ function Login() {
   };
 
   useEffect(() => {
-    if (userGlobal.id > 0) nav(`/Dashboard`);
+    if (userGlobal.id > 0) nav(`/Dashboard/${userGlobal.id}`);
   }, [userGlobal]);
 
   //--------------------------------------------------------------

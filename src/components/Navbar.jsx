@@ -7,37 +7,38 @@ import { useSelector } from "react-redux";
 
 function Navigation() {
   const nav = useNavigate();
-  const userId = useSelector((state) => state.user);
-  console.log(userId);
+  const userGlobal = useSelector((state) => state.user.user);
 
   //-----------------------------
 
-  useEffect(() => {
-    //
-  }, []);
+  useEffect(() => {}, []);
 
   //------------------------------
 
   return (
-    <div className="sticky top-0 z-40 bg-black text-white flex px-4 py-3 ">
-      <div className="flex flex-row gap-4">
+    <div className="top-0 z-40 bg-black text-white px-4 py-3 ">
+      <div className="flex flex-row justify-between gap-4">
         <button
           className="hover:text-gray-500"
-          onClick={() => nav("/Dashboard")}
+          onClick={() => nav("/Register")}
         >
-          Dashboard
+          Logo Ecommerce
         </button>
-        <button
-          className="hover:text-gray-500"
-          onClick={() => nav("/Transaction")}
-        >
-          <Icon as={MdReceipt} boxSize={5} />
-        </button>
+
         <div className="flex flex-row gap-10 items-center h-10">
-          <button className="hover:text-gray-500" onClick={() => nav("/Login")}>
-            <Icon as={MdAccountCircle} boxSize={5} />
+          <button
+            className="hover:text-gray-500"
+            onClick={() => nav(`/Dashboard/${userGlobal.id}`)}
+          >
+            Dashboard
           </button>
-          <div className="flex flex-row gap-5 ">
+          <button
+            className="hover:text-gray-500"
+            onClick={() => nav(`Transaction/${userGlobal.id}`)}
+          >
+            <Icon as={MdReceipt} boxSize={5} />
+          </button>
+          <div className="flex flex-row gap-5">
             <button
               className="hover:cursor-pointer"
               onClick={() => nav(`/Register`)}
@@ -51,6 +52,9 @@ function Navigation() {
               Login
             </button>
           </div>
+          <button className="hover:text-gray-500" onClick={() => nav("/Login")}>
+            <Icon as={MdAccountCircle} boxSize={5} />
+          </button>
         </div>
       </div>
     </div>

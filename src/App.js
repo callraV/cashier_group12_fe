@@ -15,11 +15,12 @@ function App() {
     <div>
       <Navbar />
       <Routes>
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/Transaction" element={<Transaction />} />
+        <Route path="/Dashboard/:id" element={<Dashboard />} />
+        <Route path="/Transaction/:id" element={<Transaction />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/user/verification/:token" element={<Verification />} />
+        <Route path="*" element={<Login />} />
       </Routes>
     </div>
   );
