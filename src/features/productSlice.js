@@ -90,6 +90,7 @@ export function getProducts() {
       // console.log(response);
       if (response.data) {
         dispatch(setProduct(response.data.allProduct));
+        dispatch(setMaxPage());
       }
     } catch (error) {
       console.log("ERROR\n" + error);
