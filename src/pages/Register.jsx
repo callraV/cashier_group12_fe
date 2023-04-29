@@ -25,11 +25,20 @@ function Register() {
 
   const registerAccount = async (data) => {
     try {
+      console.log(data);
       setIsLoading(true);
       let response = await Axios.post(
         "http://localhost:8000/user/register",
         data
       );
+      console.log(response);
+      if (!response.data.success) {
+        // console.log("Email already exist");
+        alert("Email already exist, Redirecting to Login Page");
+        setIsLoading(false);
+        navigate("/Login");
+      }
+      alert("Please verify your account, redirecting to Login Page");
       setIsLoading(false);
       navigate("/Login");
     } catch (error) {
