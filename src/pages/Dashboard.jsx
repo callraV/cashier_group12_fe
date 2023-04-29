@@ -25,6 +25,8 @@ function Dashboard() {
   const userGlobal = useSelector((state) => state.user.user);
   // const sortBy = useSelector((state) => state.product.sortBy); //get search category from global
   const cartList = useSelector((state) => state.cart.cartList);
+  const totalEnd = useSelector((state) => state.transaction.totalEnd);
+
   //------render product list--------
 
   const renderProducts = () => {
@@ -273,7 +275,7 @@ function Dashboard() {
                     <Tr>
                       <Td></Td>
                       <Th>TOTAL</Th>
-                      <Td isNumeric>Total</Td>
+                      <Td isNumeric>{totalEnd}</Td>
                     </Tr>
                   </Tbody>
                 </Table>

@@ -37,7 +37,6 @@ function TabledItems({ idproduct, name, quantity, price }) {
   };
 
   return (
-    
     <Tr>
       <Td>{name}</Td>
       <Td className="flex flex-row justify-around">
@@ -45,7 +44,7 @@ function TabledItems({ idproduct, name, quantity, price }) {
         <p>{quantity}</p>
         <button onClick={incItemQty}>+</button>
       </Td>
-      <Td>Rp.{price},00</Td>
+      <Td isNumeric>Rp.{price},00</Td>
     </Tr>
   );
 }

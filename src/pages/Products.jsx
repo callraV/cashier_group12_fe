@@ -142,20 +142,33 @@ function Products() {
     preview.src = URL.createObjectURL(event.target.files[0]);
   };
 
-  const uploadNewProduct = async () => {
+  const uploadNewProduct = async (data) => {
     // //create form data (postman)
 
     // // let formData = new FormData();
     // // formData.append("id", JSON.stringify({ id }));
     // // formData.append("photo", file);
 
-    if (file) {
-      let name = document.getElementById("productName").value;
-      let category = document.getElementById("productCategory").value;
-      let price = document.getElementById("productPrice").value;
-      let stock = document.getElementById("productStock").value;
+    // if (file) {
+    //   let name = document.getElementById("productName").value;
+    //   let category = document.getElementById("productCategory").value;
+    //   let price = document.getElementById("productPrice").value;
+    //   let stock = document.getElementById("productStock").value;
 
-      console.log("name: " + name + "\nimage: " + file.name + "\ncategory: " + category + "\nprice: " + price + "\nstock: " + stock);
+    //   console.log("name: " + name + "\nimage: " + file.name + "\ncategory: " + category + "\nprice: " + price + "\nstock: " + stock);
+    // }
+    try {
+      console.log(data);
+      let response = await Axios.post("http://localhost:8000/product/addNewProduct", data);
+      console.log(response);
+      if (!response.data.success) {
+        // console.log("Email already exist");
+        alert("Product already exist");
+      } else {
+        alert("Product added");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -163,6 +176,7 @@ function Products() {
   const newProductSchema = Yup.object().shape({
     // productImage: Yup.mixed().required("Please upload an image"), //NOT WORKING
     productName: Yup.string().required("Please input a name"),
+    productCategory: Yup.string().required("Please select a category"),
     productPrice: Yup.number().min(100, "Min price = IDR 100").required("Please input a price"),
     productStock: Yup.number().min(1, "Min stock = 1").required("Please input stock amount"),
   });
@@ -273,10 +287,10 @@ function Products() {
 
             <AlertDialogBody>
               <Formik
-                initialValues={{ productImage: "", productName: "", productPrice: "", productStock: "" }}
+                initialValues={{ userId: userGlobal.id, productName: "", productCategory: "", productPrice: "", productStock: "" }}
                 validationSchema={newProductSchema}
                 onSubmit={(value) => {
-                  uploadNewProduct();
+                  uploadNewProduct(value);
                 }}
               >
                 {(props) => {
@@ -334,14 +348,17 @@ function Products() {
                                 Category
                               </label>
                               <div className="mt-2">
-                                <select
+                                <Field
+                                  as="select"
                                   id="productCategory"
                                   name="productCategory"
                                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                 >
+                                  <option></option>
                                   {renderCategory()}
-                                </select>
+                                </Field>
                               </div>
+                              <ErrorMessage component="div" name="productCategory" style={{ color: "red" }} />
                             </div>
 
                             <div className="sm:col-span-3">
