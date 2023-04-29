@@ -2,37 +2,17 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Select } from "@chakra-ui/react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Button,
-  Center,
-} from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button, Center } from "@chakra-ui/react";
 
 //components
 import ProductCard from "../components/ProductCard";
 import TransactionTable from "../components/TransactionTable";
 
 //features
-import {
-  searchCategoryHandler,
-  setFilteredCategory,
-  getProducts,
-  getProductCategory,
-  sortByHandler,
-  setProduct,
-} from "../features/productSlice";
+import { searchCategoryHandler, setFilteredCategory, getProducts, getProductCategory, sortByHandler, setProduct } from "../features/product/productSlice";
 import ProductCategory from "../components/ProductCategory";
 import TabledItems from "../components/TabledItems";
-import {
-  addTransaction,
-  addTransactionProduct,
-} from "../features/transaction/transactionSlice";
+import { addTransaction, addTransactionProduct } from "../features/transaction/transactionSlice";
 
 function Dashboard() {
   //------declarations--------
@@ -41,9 +21,7 @@ function Dashboard() {
   const productList = useSelector((state) => state.product.productList);
   const categoryList = useSelector((state) => state.product.categoryList);
   const searchCategory = useSelector((state) => state.product.searchCategory); //get search category from global
-  const filteredCategory = useSelector(
-    (state) => state.product.filteredCategory
-  );
+  const filteredCategory = useSelector((state) => state.product.filteredCategory);
   const userGlobal = useSelector((state) => state.user.user);
   // const sortBy = useSelector((state) => state.product.sortBy); //get search category from global
   const cartList = useSelector((state) => state.cart.cartList);
@@ -204,14 +182,7 @@ function Dashboard() {
 
   const getCartList = () => {
     return cartList.map((item) => {
-      return (
-        <TabledItems
-          idproduct={item.idproduct}
-          name={item.productName}
-          quantity={item.quantity}
-          price={item.price}
-        />
-      );
+      return <TabledItems idproduct={item.idproduct} name={item.productName} quantity={item.quantity} price={item.price} />;
     });
   };
 
@@ -257,23 +228,13 @@ function Dashboard() {
           <div spacing={3} className="grid grid-cols-3 m-2 pt-5">
             {/* Category selector */}
             <div className="col-span-2 mr-2">
-              <Select
-                onChange={onChangeCategory}
-                name="searchCategory"
-                placeholder="Category"
-                size="md"
-              >
+              <Select onChange={onChangeCategory} name="searchCategory" placeholder="Category" size="md">
                 {renderCategory()}
               </Select>
             </div>
 
             {/* Sort selector */}
-            <Select
-              name="sortBy"
-              placeholder="Sort by"
-              size="md"
-              onChange={sortingHandler}
-            >
+            <Select name="sortBy" placeholder="Sort by" size="md" onChange={sortingHandler}>
               <option value="lowPrice" className="text-black">
                 Lowest price first
               </option>
@@ -318,11 +279,7 @@ function Dashboard() {
                 </Table>
               </TableContainer>
               <Center>
-                <Button
-                  colorScheme="blue"
-                  className="m-2"
-                  onClick={dispatchTransaction}
-                >
+                <Button colorScheme="blue" className="m-2" onClick={() => navigate(`/Payment/${userGlobal.id}`)}>
                   Checkout To Payment
                 </Button>
               </Center>

@@ -20,31 +20,18 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addQuantity,
-  decrsQuantity,
-  resetQuantity,
-  salesTypeHandler,
-} from "../features/productSlice";
 //Yup and formik
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 //Features
 import { addToCart } from "../features/cartSlice";
 import { addCart, incQuantity } from "../features/cartSlice";
+import { addQuantity, decrsQuantity, resetQuantity, salesTypeHandler } from "../features/product/productSlice";
 
 function ProductCard(props) {
   //---------------------Javascript Functions------------------------
 
-  const {
-    productImage,
-    productName,
-    description,
-    category,
-    price,
-    idproduct,
-    id,
-  } = props; //get values from localhost/.../products
+  const { productImage, productName, description, category, price, idproduct, id } = props; //get values from localhost/.../products
   const dispatch = useDispatch();
   //
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -141,13 +128,7 @@ function ProductCard(props) {
         </CardFooter>
       </Card> */}
 
-      <Card
-        direction={{ base: "column", sm: "row" }}
-        overflow="hidden"
-        variant="outline"
-        m="5"
-        p="3"
-      >
+      <Card direction={{ base: "column", sm: "row" }} overflow="hidden" variant="outline" m="5" p="3">
         {/* <Image
           objectFit="cover"
           maxW={{ base: "100%", sm: "200px" }}
@@ -155,12 +136,7 @@ function ProductCard(props) {
           alt="Caffe Latte"
         /> */}
 
-        <Image
-          src={productImage}
-          maxH="180px"
-          alt={productName}
-          borderRadius="lg"
-        />
+        <Image src={productImage} maxH="180px" alt={productName} borderRadius="lg" />
 
         <Stack>
           <CardBody>
@@ -188,13 +164,7 @@ function ProductCard(props) {
       {/* ----- */}
 
       {/* alert */}
-      <AlertDialog
-        motionPreset="slideInBottom"
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-        isOpen={isOpen}
-        isCentered
-      >
+      <AlertDialog motionPreset="slideInBottom" leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen} isCentered>
         <AlertDialogOverlay />
 
         <AlertDialogContent>
@@ -203,9 +173,7 @@ function ProductCard(props) {
           </AlertDialogHeader>
           <AlertDialogCloseButton />
 
-          <AlertDialogBody className="text-gray-400">
-            {category}
-          </AlertDialogBody>
+          <AlertDialogBody className="text-gray-400">{category}</AlertDialogBody>
           <AlertDialogBody color="blue.600" fontSize="xl">
             IDR {price * quantity}
           </AlertDialogBody>
@@ -227,53 +195,23 @@ function ProductCard(props) {
                 <Form>
                   <div className="flex gap-2">
                     <div id="my-radio-group">Sales Type: </div>
-                    <div
-                      role="group"
-                      name="SalesType"
-                      aria-labelledby="my-radio-group"
-                      onChange={onChangeSalesType}
-                    >
+                    <div role="group" name="SalesType" aria-labelledby="my-radio-group" onChange={onChangeSalesType}>
                       <label>
-                        <Field
-                          type="radio"
-                          name="SalesType"
-                          value="Dine-in"
-                          className="ml-2"
-                        />{" "}
-                        Dine-in
+                        <Field type="radio" name="SalesType" value="Dine-in" className="ml-2" /> Dine-in
                       </label>
                       <label>
-                        <Field
-                          type="radio"
-                          name="SalesType"
-                          value="Take Away"
-                          className="ml-2"
-                        />{" "}
-                        Take Away
+                        <Field type="radio" name="SalesType" value="Take Away" className="ml-2" /> Take Away
                       </label>
                       <label>
-                        <Field
-                          type="radio"
-                          name="SalesType"
-                          value="Go Food"
-                          className="ml-2"
-                        />{" "}
-                        Go Food
+                        <Field type="radio" name="SalesType" value="Go Food" className="ml-2" /> Go Food
                       </label>
-                      <ErrorMessage
-                        component="div"
-                        name="SalesType"
-                        style={{ color: "red" }}
-                      />
+                      <ErrorMessage component="div" name="SalesType" style={{ color: "red" }} />
                     </div>
                   </div>
 
                   <div className="flex py-5">
                     Quantity:
-                    <Button
-                      className="ml-6"
-                      onClick={() => dispatch(decrsQuantity())}
-                    >
+                    <Button className="ml-6" onClick={() => dispatch(decrsQuantity())}>
                       -
                     </Button>
                     <Text px="5" py="2" className="text-gray-600">

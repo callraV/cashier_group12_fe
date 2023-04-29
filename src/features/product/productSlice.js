@@ -5,6 +5,11 @@ export const productSlice = createSlice({
   name: "product",
 
   initialState: {
+    //----pagination--------
+    page: 1,
+    itemsPerPage: 5,
+    maxPage: 0,
+    //-----------------------
     productList: [],
     categoryList: [],
     quantity: 1,
@@ -40,9 +45,25 @@ export const productSlice = createSlice({
     resetQuantity: (state) => {
       state.quantity = 1;
     },
-    //-------sizes
+
+    //---------- sales type ------------
     salesTypeHandler: (state, value) => {
       state.salesType = value.payload;
+    },
+
+    //---------- pagination ------------
+    nextPageHandler: (state) => {
+      if (state.page < state.maxPage) {
+        state.page = state.page += 1;
+      }
+    },
+    prevPageHandler: (state) => {
+      if (state.page > 1) {
+        state.page = state.page -= 1;
+      }
+    },
+    setMaxPage: (state) => {
+      state.maxPage = Math.ceil(state.productList.length / state.itemsPerPage);
     },
 
     ///------------------FILTER----------------------
@@ -62,29 +83,10 @@ export const productSlice = createSlice({
   },
 });
 
-export const {
-  addProduct,
-  setProduct,
-  setCategory,
-  addQuantity,
-  decrsQuantity,
-  resetQuantity,
-  salesTypeHandler,
-  searchProductHandler,
-  searchCategoryHandler,
-  setFilteredCategory,
-  setFilteredName,
-  sortByHandler,
-} = productSlice.actions;
-
-export default productSlice.reducer;
-
 export function getProducts() {
   return async (dispatch) => {
     try {
-      const response = await Axios.get(
-        "http://localhost:8000/product/productlist"
-      ); //array
+      const response = await Axios.get("http://localhost:8000/product/productlist"); //array
       // console.log(response);
       if (response.data) {
         dispatch(setProduct(response.data.allProduct));
@@ -98,9 +100,7 @@ export function getProducts() {
 export function getProductCategory() {
   return async (dispatch) => {
     try {
-      let response = await Axios.get(
-        "http://localhost:8000/category/categorylist"
-      );
+      let response = await Axios.get("http://localhost:8000/category/categorylist");
       if (response.data.success) {
         dispatch(setCategory(response.data.categoryList));
       }
@@ -109,3 +109,23 @@ export function getProductCategory() {
     }
   };
 }
+
+export const {
+  addProduct,
+  setProduct,
+  setCategory,
+  addQuantity,
+  decrsQuantity,
+  resetQuantity,
+  salesTypeHandler,
+  nextPageHandler,
+  prevPageHandler,
+  setMaxPage,
+  searchProductHandler,
+  searchCategoryHandler,
+  setFilteredCategory,
+  setFilteredName,
+  sortByHandler,
+} = productSlice.actions;
+
+export default productSlice.reducer;
