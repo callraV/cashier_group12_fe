@@ -28,7 +28,7 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 //components
 import ProductUpdateCard from "../components/ProductUpdateCard";
 //features
-import { searchCategoryHandler, setFilteredCategory, getProducts, nextPageHandler, prevPageHandler, getProductCategory } from "../features/product/productSlice";
+import { searchCategoryHandler, setFilteredCategory, getProducts, nextPageHandler, prevPageHandler, getProductCategory } from "../features/productSlice";
 import ProductCategory from "../components/ProductCategory";
 //Formik
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -237,6 +237,7 @@ function Products() {
                             type="text"
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
+                          <ErrorMessage component="div" name="newCategory" style={{ color: "red" }} />
                         </div>
                       </div>
 

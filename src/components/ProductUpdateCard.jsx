@@ -20,7 +20,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { getProductCategory } from "../features/product/productSlice";
+import { getProductCategory } from "../features/productSlice";
 import ProductCategory from "../components/ProductCategory";
 
 import { useDispatch, useSelector } from "react-redux";

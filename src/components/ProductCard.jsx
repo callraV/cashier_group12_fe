@@ -26,7 +26,7 @@ import * as Yup from "yup";
 //Features
 import { addToCart } from "../features/cartSlice";
 import { addCart, incQuantity } from "../features/cartSlice";
-import { addQuantity, decrsQuantity, resetQuantity, salesTypeHandler } from "../features/product/productSlice";
+import { addQuantity, decrsQuantity, resetQuantity, salesTypeHandler } from "../features/productSlice";
 
 function ProductCard(props) {
   //---------------------Javascript Functions------------------------

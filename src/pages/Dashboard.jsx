@@ -9,7 +9,7 @@ import ProductCard from "../components/ProductCard";
 import TransactionTable from "../components/TransactionTable";
 
 //features
-import { searchCategoryHandler, setFilteredCategory, getProducts, getProductCategory, sortByHandler, setProduct } from "../features/product/productSlice";
+import { searchCategoryHandler, setFilteredCategory, getProducts, getProductCategory, sortByHandler, setProduct } from "../features/productSlice";
 import ProductCategory from "../components/ProductCategory";
 import TabledItems from "../components/TabledItems";
 import { addTransaction, addTransactionProduct } from "../features/transaction/transactionSlice";
