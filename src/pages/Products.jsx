@@ -128,6 +128,7 @@ function Products() {
       } else {
         alert("Category added");
       }
+      window.location.reload(false);
     } catch (error) {
       console.log(error);
     }
@@ -291,6 +292,7 @@ function Products() {
                 validationSchema={newProductSchema}
                 onSubmit={(value) => {
                   uploadNewProduct(value);
+                  dispatch(getProducts());
                 }}
               >
                 {(props) => {
