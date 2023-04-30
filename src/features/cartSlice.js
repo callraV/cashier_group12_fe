@@ -46,7 +46,7 @@ export const cartSlice = createSlice({
 
 export function addToCart(data) {
   return async (dispatch) => {
-    let response = await Axios.post("http://localhost:2000/carts", data);
+    let response = await Axios.post("http://localhost:8000/transaction", data);
     // console.log(response);
     dispatch(addCart(response.data));
     dispatch(getTotalPrice());
@@ -62,9 +62,7 @@ export const deleteCartItem = (data) => {
 //called for in CartItem.jsx :
 export function removeFromCart(cartId) {
   return async (dispatch) => {
-    let response = await Axios.delete(
-      "http://localhost:2000/carts/" + Object.values(cartId)
-    );
+    let response = await Axios.delete("http://localhost:8000/transaction/" + Object.values(cartId));
     dispatch(getCart(response.data));
     dispatch(getTotalPrice());
   };
@@ -73,14 +71,14 @@ export function removeFromCart(cartId) {
 //update quantity
 export function getCart() {
   return async (dispatch) => {
-    let response = await Axios.get("http://localhost:2000/carts");
+    let response = await Axios.get("http://localhost:8000/transaction");
     dispatch(setCart(response.data));
   };
 }
 
 export function getTotalPrice() {
   return async (dispatch) => {
-    let response = await Axios.get("http://localhost:2000/carts");
+    let response = await Axios.get("http://localhost:8000/transaction");
     let totalArray = response.data.map((a) => a.totalPrice); //get every instance of "price" and store in an array
     let totalPrice = totalArray.reduce((a, b) => a + b, 0); //sum all elements in the array
     dispatch(setTotalEnd(totalPrice));
@@ -96,12 +94,5 @@ export const addingQuantity = (id) => {
 // }
 
 // Action creators are generated for each case reducer function
-export const {
-  addCart,
-  setCart,
-  setTotalEnd,
-  incQuantity,
-  dcsQuantity,
-  deleteItem,
-} = cartSlice.actions;
+export const { addCart, setCart, setTotalEnd, incQuantity, dcsQuantity, deleteItem } = cartSlice.actions;
 export default cartSlice.reducer;
