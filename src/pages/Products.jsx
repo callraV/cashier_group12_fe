@@ -3,26 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Axios from "axios";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  AlertDialogCloseButton,
-  useDisclosure,
-  Card,
-  CardBody,
-  CardFooter,
-  Heading,
-  Image,
-  Divider,
-  ButtonGroup,
-  Center,
-  Stack,
-  Button,
-  Text,
-} from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton, useDisclosure, Image, Center, Stack, Button, Text } from "@chakra-ui/react";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 
 //components
