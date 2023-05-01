@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import Axios from "axios";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { AlertDialog, AlertDialogBody, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton, useDisclosure, Image, Center, Stack, Button, Text } from "@chakra-ui/react";
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 
 //components
 import ProductUpdateCard from "../components/ProductUpdateCard";
