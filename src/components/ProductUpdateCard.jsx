@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AlertDialog, AlertDialogBody, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton, useDisclosure, Card, CardBody, Heading, Stack, Image, Button, Text, Center } from "@chakra-ui/react";
 import ProductCategory from "../components/ProductCategory";
+import Axios from "axios";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -31,7 +32,33 @@ function ProductUpdateCard(props) {
 
   //-----send to backend---------
   const uploadUpdate = async (data) => {
-    console.log(data);
+    // //create form data (postman)
+
+    // // let formData = new FormData();
+    // // formData.append("id", JSON.stringify({ id }));
+    // // formData.append("photo", file);
+
+    // if (file) {
+    //   let name = document.getElementById("productName").value;
+    //   let category = document.getElementById("productCategory").value;
+    //   let price = document.getElementById("productPrice").value;
+    //   let stock = document.getElementById("productStock").value;
+
+    //   console.log("name: " + name + "\nimage: " + file.name + "\ncategory: " + category + "\nprice: " + price + "\nstock: " + stock);
+    // }
+    try {
+      console.log(data);
+      let response = await Axios.post("http://localhost:8000/product/updateProduct", data);
+      console.log(response);
+      if (!response.data.success) {
+        // console.log("Email already exist");
+        alert("Error occured: cannot find product");
+      } else {
+        alert("Product added");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //----------schema--------------
@@ -110,7 +137,7 @@ function ProductUpdateCard(props) {
 
           <AlertDialogBody>
             <Formik
-              initialValues={{ userId: userGlobal.id, productName: { productName }.value, productCategory: { category }.value, productPrice: { price }.value, productStock: "" }}
+              initialValues={{ userId: userGlobal.id, idProduct: id, productName: { productName }.value, productCategory: { category }.value, productPrice: { price }.value, productStock: "" }}
               validationSchema={updateProductSchema}
               onSubmit={(value) => {
                 uploadUpdate(value);
