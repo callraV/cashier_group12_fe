@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,7 +9,6 @@ import {
   useDisclosure,
   Card,
   CardBody,
-  CardFooter,
   Heading,
   Stack,
   Image,
