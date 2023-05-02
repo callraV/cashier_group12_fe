@@ -1,19 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Tr, Td } from "@chakra-ui/react";
+import { setGrossIncome } from "../features/transaction/transactionSlice";
 
 function TransactionTable(props) {
-  const { productName, price, quantity } = props;
+  const {
+    category,
+    date,
+    idtransaction,
+    name,
+    pricePerPiece,
+    quantity,
+    totalPrice,
+  } = props.transData;
+
+  // console.log(
+  //   category,
+  //   date,
+  //   idtransaction,
+  //   name,
+  //   pricePerPiece,
+  //   quantity,
+  //   totalPrice
+  // );
   //id = cart id
   //product id = ???
-  const total = price * quantity;
+  const total = pricePerPiece * quantity;
 
   //-------------------------------------------------------------------
 
   return (
     <Tr>
-      <Td>{productName}</Td>
+      <Td>{name}</Td>
       <Td>{quantity}</Td>
-      <Td isNumeric>{total}</Td>
+      <Td isNumeric>Rp.{pricePerPiece * quantity},00</Td>
     </Tr>
   );
 }
