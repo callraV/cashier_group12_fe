@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,7 +9,6 @@ import {
   useDisclosure,
   Card,
   CardBody,
-  CardFooter,
   Heading,
   Stack,
   Image,
@@ -31,7 +30,8 @@ import { addQuantity, decrsQuantity, resetQuantity, salesTypeHandler } from "../
 function ProductCard(props) {
   //---------------------Javascript Functions------------------------
 
-  const { productImage, productName, description, category, price, idproduct, id } = props; //get values from localhost/.../products
+  const { stock, imagePath, productName, description, category, price, idproduct, id } = props; //get values from localhost/.../products
+  const productImage = `http://localhost:8000${imagePath}`;
   const dispatch = useDispatch();
   //
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -79,73 +79,30 @@ function ProductCard(props) {
   const SalesTypeSchema = Yup.object().shape({
     SalesType: Yup.string().required("Please select sales type"),
   });
-  // const addCart = () => {
-  //   dispatch(
-  //     addToCart({
-  //       productId: id,
-  //       productName: productName,
-  //       description: description,
-  //       category: category,
-  //       price: price,
-  //       salesType: salesType,
-  //       qty: quantity,
-  //       totalPrice: quantity * price,
-  //     })
-  //   );
-  //   // console.log(dispatch(checkCart()));
-  // };
 
   //-------------------------------------------------------------------
 
   return (
     <div>
-      {/* <Card maxW="sm" h="630">
-        <CardBody>
-          <Image src={productImage} alt={productName} borderRadius="lg" />
-          <Stack mt="6" spacing="3">
-            <Heading size="md">{productName}</Heading>
-
-            <Text className="text-gray-400">{category}</Text>
-            <Text color="blue.600" fontSize="2xl">
-              IDR {price}
-            </Text>
-          </Stack>
-        </CardBody>
-        <Divider />
-        <CardFooter>
-          <ButtonGroup spacing="2">
-            <Button
-              onClick={() => {
-                onOpen();
-                dispatch(resetQuantity());
-              }}
-              variant="solid"
-              colorScheme="blue"
-            >
-              Add
-            </Button>
-          </ButtonGroup>
-        </CardFooter>
-      </Card> */}
-
       <Card direction={{ base: "column", sm: "row" }} overflow="hidden" variant="outline" m="5" p="3">
-        {/* <Image
-          objectFit="cover"
-          maxW={{ base: "100%", sm: "200px" }}
-          src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-          alt="Caffe Latte"
-        /> */}
-
-        <Image src={productImage} maxH="180px" alt={productName} borderRadius="lg" />
+        <Image src={productImage} objectFit="cover" maxH="180px" alt={productName} borderRadius="lg" />
 
         <Stack>
           <CardBody>
-            <Heading size="md">{productName}</Heading>
-            <Text>Rp.{price},00</Text>
+            <Heading size="md" color="gray.800">
+              {productName}
+            </Heading>
 
-            <Text className="text-gray-400">{category}</Text>
-            <Text className="text-gray-400">{idproduct}</Text>
-            <Text py="2">{description}</Text>
+            <Text color="gray.500" size="xl" py="2">
+              {category}
+            </Text>
+
+            <Text color="blue.600" fontSize="xl">
+              IDR {price}
+            </Text>
+            <Text color="gray.400" py="1">
+              Stock: {stock}
+            </Text>
             <Button
               onClick={() => {
                 onOpen();

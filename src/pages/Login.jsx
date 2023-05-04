@@ -14,12 +14,8 @@ function Login() {
   //-----------------------Schema---------------------------------
 
   const logInSchema = Yup.object().shape({
-    email: Yup.string()
-      .required("Please input your email")
-      .email("Please enter your email"),
-    password: Yup.string()
-      .min(3, "Password too short")
-      .required("Please input a password"),
+    email: Yup.string().required("Please input your email").email("Please enter your email"),
+    password: Yup.string().min(3, "Password too short").required("Please input a password"),
   });
 
   const logInAccount = (data) => {
@@ -60,52 +56,25 @@ function Login() {
                           {/* Row 1 */}
                           <label htmlFor="email"> Email </label>
                           <div className="col-span-2">
-                            <Field
-                              type="text"
-                              name="email"
-                              className="border-2 rounded-lg text-black"
-                            />
-                            <ErrorMessage
-                              component="div"
-                              name="email"
-                              style={{ color: "red" }}
-                            />
+                            <Field type="text" name="email" className="border-2 rounded-lg text-black" />
+                            <ErrorMessage component="div" name="email" style={{ color: "red" }} />
                           </div>
 
                           {/* Row 2 */}
                           <label htmlFor="password"> Password </label>
                           <div className="col-span-2">
-                            <Field
-                              type="password"
-                              name="password"
-                              className="border-2 rounded-lg text-black"
-                            />
+                            <Field type="password" name="password" className="border-2 rounded-lg text-black" />
                             <Checkbox ml="2">Show</Checkbox>
-                            <ErrorMessage
-                              component="div"
-                              name="password"
-                              style={{ color: "red" }}
-                            />
+                            <ErrorMessage component="div" name="password" style={{ color: "red" }} />
                           </div>
 
                           {/* Row 3 */}
-                          <Button
-                            type="submit"
-                            colorScheme="blue"
-                            my="2"
-                            className="col-span-3"
-                          >
+                          <Button type="submit" colorScheme="blue" my="2" className="col-span-3">
                             Log In
                           </Button>
 
                           {/* Row 4 */}
-                          <Button
-                            onClick={() => nav("/Register")}
-                            variant="ghost"
-                            colorScheme="blue"
-                            my="2"
-                            className="col-span-3"
-                          >
+                          <Button onClick={() => nav("/Register")} variant="ghost" colorScheme="blue" my="2" className="col-span-3">
                             Sign Up
                           </Button>
                         </div>
