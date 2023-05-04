@@ -8,6 +8,9 @@ export const transactionSlice = createSlice({
       transactionList: [],
       filteredTransaction: [],
     },
+    topProduct: [],
+    filteredProduct: [],
+    categoryProduct: [],
     grossIncome: 0,
   },
   reducers: {
@@ -19,6 +22,23 @@ export const transactionSlice = createSlice({
     },
     resetGrossIncome: (state) => {
       state.grossIncome = 0;
+    },
+    resetTopProduct: (state) => {
+      state.topProduct = [];
+    },
+    resetCategoryProduct: (state) => {
+      state.categoryProduct = [];
+    },
+    setTopProduct: (state, action) => {
+      state.topProduct = action.payload;
+    },
+    setCategoryProduct: (state, action) => {
+      state.categoryProduct = action.payload;
+    },
+    filterCategoryProduct: (state, action) => {
+      state.filteredProduct = [...state.topProduct].filter((val) => {
+        return val.category === action.payload;
+      });
     },
   },
 });
@@ -50,6 +70,27 @@ export const fetchAllTransaction = (userId) => {
       dispatch(setTransaction(response.data.result));
     } else {
       alert("kenapa error yak?");
+    }
+  };
+};
+
+export const getTopProduct = (id) => {
+  return async (dispatch) => {
+    console.log("Top product works");
+    dispatch(resetTopProduct());
+    let response = await Axios.get(
+      `http://localhost:8000/transaction/fetchtopproduct/${id}`
+    );
+    if (response.data.success) {
+      let topProductData = response.data.result;
+      let categoryProduct = topProductData
+        .map((val) => val.category)
+        .filter((val, index, self) => self.indexOf(val) === index);
+      // console.log(a);
+      dispatch(setCategoryProduct(categoryProduct));
+      dispatch(setTopProduct(response.data.result));
+    } else {
+      alert(response.data.message);
     }
   };
 };
@@ -99,7 +140,15 @@ export const addTransaction = (data) => {
   };
 };
 
-export const { setTransaction, setGrossIncome, resetGrossIncome } =
-  transactionSlice.actions;
+export const {
+  setTransaction,
+  setGrossIncome,
+  resetGrossIncome,
+  resetTopProduct,
+  setTopProduct,
+  resetCategoryProduct,
+  setCategoryProduct,
+  filterCategoryProduct,
+} = transactionSlice.actions;
 
 export default transactionSlice.reducer;
