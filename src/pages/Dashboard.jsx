@@ -37,7 +37,7 @@ function Dashboard() {
             //product ID
             id={p.idproduct}
             //
-            productImage={p.productImage}
+            imagePath={p.imagePath}
             //
             productName={p.name}
             //
@@ -46,6 +46,8 @@ function Dashboard() {
             category={p.category}
             //
             price={p.price}
+            //
+            stock={p.stock}
           />
         );
       });
@@ -65,6 +67,8 @@ function Dashboard() {
             category={p.category}
             //
             price={p.price}
+            //
+            stock={p.stock}
           />
         );
       });
@@ -76,22 +80,6 @@ function Dashboard() {
       return <ProductCategory name={category.name} />;
     });
   };
-  //------render transaction table--------
-
-  // const renderTransactionTable = () => {
-  //   return transactionList.map((c) => {
-  //     return (
-  //       <TransactionTable
-  //         productName={c.productName}
-  //         //
-  //         quantity={c.qty}
-  //         //
-  //         price={c.price}
-  //         //
-  //       />
-  //     );
-  //   });
-  // };
 
   //------category handler--------
 
@@ -223,7 +211,7 @@ function Dashboard() {
   return (
     <div className="bg-neutral-800 text-white min-h-screen">
       <br />
-      <div className="grid grid-cols-5 bg-black">
+      <div className="grid grid-cols-5">
         {/* // */}
 
         <div name="ProductList" className="col-span-3">

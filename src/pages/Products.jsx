@@ -61,7 +61,7 @@ function Products() {
           //product ID
           id={p.idproduct}
           //
-          productImage={p.productImage}
+          imagePath={p.imagePath}
           //
           productName={p.name}
           //
@@ -70,6 +70,8 @@ function Products() {
           category={p.category}
           //
           price={p.price}
+          //
+          stock={p.stock}
         />
       );
     });
@@ -104,7 +106,7 @@ function Products() {
       console.log(response);
       if (!response.data.success) {
         // console.log("Email already exist");
-        alert("Category already exist");
+        alert("ERROR: category already exist");
       } else {
         alert("Category added");
       }
@@ -124,27 +126,20 @@ function Products() {
   };
 
   const uploadNewProduct = async (data) => {
-    // //create form data (postman)
-
-    // // let formData = new FormData();
-    // // formData.append("id", JSON.stringify({ id }));
-    // // formData.append("photo", file);
-
-    // if (file) {
-    //   let name = document.getElementById("productName").value;
-    //   let category = document.getElementById("productCategory").value;
-    //   let price = document.getElementById("productPrice").value;
-    //   let stock = document.getElementById("productStock").value;
-
-    //   console.log("name: " + name + "\nimage: " + file.name + "\ncategory: " + category + "\nprice: " + price + "\nstock: " + stock);
-    // }
     try {
-      console.log(data);
-      let response = await Axios.post("http://localhost:8000/product/addNewProduct", data);
+      let formData = new FormData();
+      formData.append("userId", data.userId);
+      formData.append("idProduct", data.idProduct);
+      formData.append("productCategory", data.productCategory);
+      formData.append("productImage", file);
+      formData.append("productName", data.productName);
+      formData.append("productPrice", data.productPrice);
+      formData.append("productStock", data.productStock);
+
+      let response = await Axios.post("http://localhost:8000/product/addNewProduct", formData);
       console.log(response);
       if (!response.data.success) {
-        // console.log("Email already exist");
-        alert("Product already exist");
+        alert("ERROR: cannot find product to add");
       } else {
         alert("Product added");
       }
@@ -171,7 +166,7 @@ function Products() {
   return (
     <div className="bg-neutral-800 text-white min-h-screen">
       {/* // */}
-      Products
+
       <div spacing={3} className="grid grid-cols-6 pt-5 px-5">
         {/*  */}
 

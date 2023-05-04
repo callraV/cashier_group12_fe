@@ -12,7 +12,8 @@ import * as Yup from "yup";
 function ProductUpdateCard(props) {
   //---------------------Javascript Functions------------------------
 
-  const { id, productName, price, productImage, description, category } = props; //get values from localhost/.../products
+  const { id, productName, imagePath, price, description, category, stock } = props; //get values from localhost/.../products
+  const productImage = `http://localhost:8000${imagePath}`;
   const dispatch = useDispatch();
   //
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,9 +21,9 @@ function ProductUpdateCard(props) {
   const categoryList = useSelector((state) => state.product.categoryList);
   //
   const userGlobal = useSelector((state) => state.user.user);
-
   //------photo update--------
   const [file, setFile] = useState(null);
+
   const onFileChange = (event) => {
     console.log(event.target.files[0]); //checker
     setFile(event.target.files[0]);
@@ -32,30 +33,45 @@ function ProductUpdateCard(props) {
 
   //-----send to backend---------
   const uploadUpdate = async (data) => {
-    // //create form data (postman)
-
-    // // let formData = new FormData();
-    // // formData.append("id", JSON.stringify({ id }));
-    // // formData.append("photo", file);
-
-    // if (file) {
-    //   let name = document.getElementById("productName").value;
-    //   let category = document.getElementById("productCategory").value;
-    //   let price = document.getElementById("productPrice").value;
-    //   let stock = document.getElementById("productStock").value;
-
-    //   console.log("name: " + name + "\nimage: " + file.name + "\ncategory: " + category + "\nprice: " + price + "\nstock: " + stock);
-    // }
     try {
-      console.log(data);
-      let response = await Axios.post("http://localhost:8000/product/updateProduct", data);
+      // data["productImage"] = file; //append image path
+      let formData = new FormData();
+      formData.append("userId", data.userId);
+      formData.append("idProduct", data.idProduct);
+      formData.append("productCategory", data.productCategory);
+      formData.append("productImage", file);
+      formData.append("productName", data.productName);
+      formData.append("productPrice", data.productPrice);
+      formData.append("productStock", data.productStock);
+
+      let response = await Axios.post("http://localhost:8000/product/updateProduct", formData);
       console.log(response);
       if (!response.data.success) {
-        // console.log("Email already exist");
-        alert("Error occured: cannot find product");
+        alert("ERROR: cannot find product to update");
       } else {
         alert("Product added");
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //-----delete from be---------
+  const deleteProduct = async () => {
+    try {
+      let data = { name: productName };
+
+      // console.log(productName);
+      console.log(data); //checker
+
+      let response = await Axios.delete("http://localhost:8000/product/deleteProduct", data);
+      // console.log(response);
+
+      // if (!response.data.success) {
+      //   alert("ERROR: cannot find product to deleye");
+      // } else {
+      //   alert("Product deleted");
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -70,10 +86,10 @@ function ProductUpdateCard(props) {
 
   const updateProductSchema = Yup.object().shape({
     // productImage: Yup.mixed().required("Please upload an image"), //NOT WORKING
-    productName: Yup.string().required("Please input a name"),
-    productCategory: Yup.string().required("Please select a category"),
-    productPrice: Yup.number().min(100, "Min price = IDR 100").required("Please input a price"),
-    productStock: Yup.number().min(1, "Min stock = 1").required("Please input stock amount"),
+    productName: Yup.string().required("Please input a new name"),
+    productCategory: Yup.string().required("Please select a new category"),
+    productPrice: Yup.number().min(100, "Min price = IDR 100").required("Please input a new price"),
+    productStock: Yup.number().min(1, "Min stock = 1").required("Please input new stock amount"),
   });
 
   //--------------------------------
@@ -89,7 +105,7 @@ function ProductUpdateCard(props) {
     <div>
       <Card direction={{ base: "column", sm: "row" }} overflow="hidden" variant="outline" m="5" px="3">
         <Center>
-          <Image src={productImage} maxH="180px" alt={productName} borderRadius="lg" />
+          <Image src={productImage} objectFit="cover" maxH="180px" alt={productName} borderRadius="lg" />
         </Center>
 
         <Stack>
@@ -105,7 +121,9 @@ function ProductUpdateCard(props) {
             <Text color="blue.600" fontSize="xl">
               IDR {price}
             </Text>
-            <Text py="2">{description} </Text>
+            <Text color="gray.400" py="1">
+              Stock: {stock}
+            </Text>
             <Button
               onClick={() => {
                 onOpen();
@@ -115,7 +133,7 @@ function ProductUpdateCard(props) {
             >
               Update
             </Button>
-            <Button colorScheme="red" mt="3" mx="2">
+            <Button onClick={() => deleteProduct()} colorScheme="red" mt="3" mx="2">
               Deactivate
             </Button>
           </CardBody>
@@ -137,11 +155,10 @@ function ProductUpdateCard(props) {
 
           <AlertDialogBody>
             <Formik
-              initialValues={{ userId: userGlobal.id, idProduct: id, productName: { productName }.value, productCategory: { category }.value, productPrice: { price }.value, productStock: "" }}
+              initialValues={{ userId: userGlobal.id, idProduct: id, productName: { productName }.value, productCategory: { category }.value, productPrice: { price }.value, productStock: { stock }.value }}
               validationSchema={updateProductSchema}
               onSubmit={(value) => {
                 uploadUpdate(value);
-                //console.log("Update item");
               }}
             >
               {(props) => {
@@ -257,8 +274,8 @@ function ProductUpdateCard(props) {
                                 type="number"
                                 name="productStock"
                                 id="productStock"
-                                placeholder={description}
-                                defaultValue={description}
+                                placeholder={stock}
+                                defaultValue={stock}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               />
                             </div>
