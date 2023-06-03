@@ -25,6 +25,7 @@ function Payment() {
   const userGlobal = useSelector((state) => state.user.user);
   // const sortBy = useSelector((state) => state.product.sortBy); //get search category from global
   const cartList = useSelector((state) => state.cart.cartList);
+  const transactionList = useSelector((state) => state.transaction.transaction.transactionList);
 
   //------render cart list--------
 
@@ -95,7 +96,14 @@ function Payment() {
               </Table>
             </TableContainer>
             <Center>
-              <Button colorScheme="blue" className="m-2" onClick={dispatchTransaction}>
+              <Button
+                colorScheme="blue"
+                className="m-2"
+                onClick={() => {
+                  dispatchTransaction();
+                  navigate(`/Login`);
+                }}
+              >
                 Pay now
               </Button>
             </Center>
